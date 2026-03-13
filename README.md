@@ -20,17 +20,9 @@ This skill teaches AI coding assistants (Claude Code, Codex, etc.) the small des
 
 ## Installation
 
-Clone this repo into your Claude Code skills directory:
-
 ```bash
-# Personal (all projects)
-git clone https://github.com/jakubkrehel/make-interfaces-feel-better ~/.claude/skills/make-interfaces-feel-better
-
-# Project-specific
-git clone https://github.com/jakubkrehel/make-interfaces-feel-better .claude/skills/make-interfaces-feel-better
+npx skills add jakubkrehel/make-interfaces-feel-better
 ```
-
-Or add it as a [Claude Code plugin](https://docs.anthropic.com/en/docs/claude-code/plugins).
 
 ## Usage
 
