@@ -7,95 +7,85 @@ description: Design engineering principles for making interfaces feel polished. 
 
 Great interfaces rarely come from a single thing. It's usually a collection of small details that compound into a great experience. Apply these principles when building or reviewing UI code.
 
-## Text wrapping
+## Quick Reference
 
-Use `text-wrap: balance` (or Tailwind's `text-balance`) on headings and short text blocks. It distributes text evenly across lines, avoiding orphaned words.
+| Category | When to Use |
+| --- | --- |
+| [Typography](typography.md) | Text wrapping, font smoothing, tabular numbers |
+| [Layout & Spacing](layout-and-spacing.md) | Border radius, optical alignment, shadows, image outlines |
+| [Animations](animations.md) | Interruptible animations, enter/exit transitions, icon animations |
 
-Use `text-wrap: pretty` as an alternative — it optimizes the last line to avoid orphans but is slightly more expensive.
+## Core Principles
 
-## Concentric border radius
+### 1. Concentric Border Radius
 
-When nesting rounded elements, the outer radius must equal the inner radius plus the padding between them:
+Outer radius = inner radius + padding. Mismatched radii on nested elements is the most common thing that makes interfaces feel off.
 
-```
-outerRadius = innerRadius + padding
-```
+### 2. Optical Over Geometric Alignment
 
-Mismatched border radii on nested elements is one of the most common things that makes interfaces feel off. Always calculate concentrically.
+When geometric centering looks off, align optically. Buttons with icons, play triangles, and asymmetric icons all need manual adjustment.
 
-## Animate icons contextually
+### 3. Shadows Over Borders
 
-When icons appear or disappear contextually (e.g., on hover, on state change), animate them with `opacity`, `scale`, and `blur` rather than just toggling visibility. This makes transitions feel responsive.
+Layer multiple transparent `box-shadow` values for natural depth. Shadows adapt to any background; solid borders don't.
 
-Spring animations (e.g., via Motion/Framer Motion) work particularly well for icon transitions.
+### 4. Interruptible Animations
 
-## Font smoothing (macOS)
+Use CSS transitions for interactive state changes — they can be interrupted mid-animation. Reserve keyframes for staged sequences that run once.
 
-On macOS, text can render heavier than intended. Apply `-webkit-font-smoothing: antialiased` (or Tailwind's `antialiased` class) to the root layout so all text renders crisper and thinner.
+### 5. Split and Stagger Enter Animations
 
-## Tabular numbers
+Don't animate a single container. Break content into semantic chunks and stagger each with ~100ms delay.
 
-When numbers update dynamically (counters, prices, timers), use `font-variant-numeric: tabular-nums` (or Tailwind's `tabular-nums`) to prevent layout shift. This makes all digits equal width.
+### 6. Subtle Exit Animations
 
-Note: some fonts like Inter change the visual appearance of numerals with this property.
+Use a small fixed `translateY` instead of full height. Exits should be softer than enters.
 
-## Interruptible animations
+### 7. Contextual Icon Animations
 
-- **CSS transitions**: interpolate toward the latest state and can be interrupted mid-animation. Use these for interactive state changes (hover, toggle, open/close).
-- **CSS keyframe animations**: run on a fixed timeline and don't retarget. Use these for staged sequences that run once (enter animations, loading states).
+Animate icons with `opacity`, `scale`, and `blur` instead of toggling visibility. Spring animations work well here.
 
-Users change intent mid-interaction. If animations aren't interruptible, the interface feels broken. Always prefer CSS transitions for interactive elements.
+### 8. Font Smoothing
 
-## Enter animations: split and stagger
+Apply `-webkit-font-smoothing: antialiased` to the root layout on macOS for crisper text.
 
-Don't animate a single large container. Break content into semantic chunks and animate each individually:
+### 9. Tabular Numbers
 
-1. Split into logical groups (title, description, buttons)
-2. Stagger with ~100ms delay between groups
-3. For titles, consider splitting into individual words with ~80ms stagger
-4. Combine `opacity`, `blur`, and `translateY` for enter animations
+Use `font-variant-numeric: tabular-nums` for any dynamically updating numbers to prevent layout shift.
 
-## Exit animations: keep them subtle
+### 10. Text Wrapping
 
-Exit animations should be softer and less attention-grabbing than enter animations:
+Use `text-wrap: balance` on headings. Use `text-wrap: pretty` for body text to avoid orphans.
 
-- Use a small fixed `translateY` value (e.g., `-12px`) instead of the full container height
-- Keep some directional movement to indicate where the element went
-- Don't remove exit animation entirely — subtle motion preserves context
+### 11. Image Outlines
 
-## Optical alignment over geometric alignment
+Add a subtle `1px` outline with low opacity to images for consistent depth.
 
-When geometric centering looks off, align optically instead:
+## Common Mistakes
 
-- Buttons with text + icon: use slightly less padding on the icon side
-- Play button triangles: shift slightly right to account for visual weight
-- Asymmetric icons (stars, arrows): adjust with margin/padding, or fix in the SVG itself
+| Mistake | Fix |
+| --- | --- |
+| Same border radius on parent and child | Calculate `outerRadius = innerRadius + padding` |
+| Icons look off-center | Adjust optically with padding or fix SVG directly |
+| Hard borders between sections | Use layered `box-shadow` with transparency |
+| Jarring enter/exit animations | Split, stagger, and keep exits subtle |
+| Numbers cause layout shift | Apply `tabular-nums` |
+| Heavy text on macOS | Apply `antialiased` to root |
 
-The best fix for icons is adjusting the SVG directly so no extra margin/padding is needed.
+## Review Checklist
 
-## Shadows instead of borders
+- [ ] Nested rounded elements use concentric border radius
+- [ ] Icons are optically centered, not just geometrically
+- [ ] Shadows used instead of borders where appropriate
+- [ ] Enter animations are split and staggered
+- [ ] Exit animations are subtle
+- [ ] Dynamic numbers use tabular-nums
+- [ ] Font smoothing is applied
+- [ ] Headings use text-wrap: balance
+- [ ] Images have subtle outlines
 
-Prefer subtle `box-shadow` over solid borders for depth:
+## Reference Files
 
-```css
-box-shadow:
-  0px 1px 1px rgba(0, 0, 0, 0.03),
-  0px 4px 6px rgba(0, 0, 0, 0.02),
-  0px 1px 2px rgba(0, 0, 0, 0.04);
-```
-
-- Layer multiple shadows for natural depth (typically 3 shadows)
-- For hover states, use the same shadows but slightly darker
-- Add `transition-property: box-shadow` for smooth hover transitions
-- Shadows adapt to any background since they use transparency; solid borders don't
-
-## Image outlines
-
-Add a subtle `1px` outline with low opacity to images:
-
-```css
-outline: 1px solid rgba(0, 0, 0, 0.1); /* light mode */
-outline: 1px solid rgba(255, 255, 255, 0.1); /* dark mode */
-```
-
-This creates consistent depth, especially in design systems where other elements use borders.
+- [typography.md](typography.md) — Text wrapping, font smoothing, tabular numbers
+- [layout-and-spacing.md](layout-and-spacing.md) — Border radius, optical alignment, shadows, image outlines
+- [animations.md](animations.md) — Interruptible animations, enter/exit transitions, icon animations

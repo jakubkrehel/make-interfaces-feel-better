@@ -1,0 +1,239 @@
+# Animations
+
+Interruptible animations, enter/exit transitions, and contextual icon animations.
+
+## Interruptible Animations
+
+Users change intent mid-interaction. If animations aren't interruptible, the interface feels broken.
+
+### CSS Transitions vs. Keyframes
+
+| | CSS Transitions | CSS Keyframe Animations |
+| --- | --- | --- |
+| **Behavior** | Interpolate toward latest state | Run on a fixed timeline |
+| **Interruptible** | Yes — retargets mid-animation | No — restarts from beginning |
+| **Use for** | Interactive state changes (hover, toggle, open/close) | Staged sequences that run once (enter animations, loading) |
+| **Duration** | Adapts to remaining distance | Fixed regardless of state |
+
+```css
+/* Good — interruptible transition for a toggle */
+.drawer {
+  transform: translateX(-100%);
+  transition: transform 200ms ease-out;
+}
+.drawer.open {
+  transform: translateX(0);
+}
+
+/* Clicking again mid-animation smoothly reverses — no jank */
+```
+
+```css
+/* Bad — keyframe animation for interactive element */
+.drawer.open {
+  animation: slideIn 200ms ease-out forwards;
+}
+
+/* Closing mid-animation snaps or restarts — feels broken */
+```
+
+**Rule:** Always prefer CSS transitions for interactive elements. Reserve keyframes for one-shot sequences.
+
+## Enter Animations: Split and Stagger
+
+Don't animate a single large container. Break content into semantic chunks and animate each individually.
+
+### Step by Step
+
+1. **Split** into logical groups (title, description, buttons)
+2. **Stagger** with ~100ms delay between groups
+3. **For titles**, consider splitting into individual words with ~80ms stagger
+4. **Combine** `opacity`, `blur`, and `translateY` for the enter effect
+
+### Code Example
+
+```tsx
+// Motion (Framer Motion) — staggered enter
+function PageHeader() {
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        visible: { transition: { staggerChildren: 0.1 } },
+      }}
+    >
+      <motion.h1
+        variants={{
+          hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+        }}
+      >
+        Welcome
+      </motion.h1>
+
+      <motion.p
+        variants={{
+          hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+        }}
+      >
+        A description of the page.
+      </motion.p>
+
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+        }}
+      >
+        <Button>Get started</Button>
+      </motion.div>
+    </motion.div>
+  );
+}
+```
+
+### CSS-Only Stagger
+
+```css
+.stagger-item {
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(4px);
+  animation: fadeInUp 400ms ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 100ms; }
+.stagger-item:nth-child(3) { animation-delay: 200ms; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+```
+
+## Exit Animations
+
+Exit animations should be softer and less attention-grabbing than enter animations. The user's focus is moving to the next thing — don't fight for attention.
+
+### Subtle Exit (Recommended)
+
+```tsx
+// Small fixed translateY — indicates direction without drama
+<motion.div
+  exit={{
+    opacity: 0,
+    y: -12,
+    filter: "blur(4px)",
+    transition: { duration: 0.15, ease: "easeIn" },
+  }}
+>
+  {content}
+</motion.div>
+```
+
+### Full Exit (When Context Matters)
+
+```tsx
+// Slide fully out — use when spatial context is important
+// (e.g., a card returning to a list, a drawer closing)
+<motion.div
+  exit={{
+    opacity: 0,
+    x: "-100%",
+    transition: { duration: 0.2, ease: "easeIn" },
+  }}
+>
+  {content}
+</motion.div>
+```
+
+### Good vs. Bad
+
+```css
+/* Good — subtle exit */
+.item-exit {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: all 150ms ease-in;
+}
+
+/* Bad — dramatic exit that steals focus */
+.item-exit {
+  opacity: 0;
+  transform: translateY(-100%) scale(0.5);
+  transition: all 400ms ease-in;
+}
+
+/* Bad — no exit animation at all (element just vanishes) */
+.item-exit {
+  display: none;
+}
+```
+
+**Key points:**
+- Use a small fixed `translateY` (e.g., `-12px`) instead of the full container height
+- Keep some directional movement to indicate where the element went
+- Exit duration should be shorter than enter duration (150ms vs 300ms)
+- Don't remove exit animations entirely — subtle motion preserves context
+
+## Contextual Icon Animations
+
+When icons appear or disappear contextually (on hover, on state change), animate them with `opacity`, `scale`, and `blur` rather than just toggling visibility.
+
+### Motion Example
+
+```tsx
+import { AnimatePresence, motion } from "motion/react";
+
+function IconButton({ isActive, icon: Icon }) {
+  return (
+    <button>
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={isActive ? "active" : "inactive"}
+          initial={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
+          transition={{ type: "spring", duration: 0.3, bounce: 0.1 }}
+        >
+          <Icon />
+        </motion.span>
+      </AnimatePresence>
+    </button>
+  );
+}
+```
+
+### CSS-Only Approach
+
+```css
+.icon-enter {
+  opacity: 0;
+  transform: scale(0.6);
+  filter: blur(4px);
+  transition: all 200ms ease-out;
+}
+
+.icon-enter.visible {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+```
+
+### When to Animate Icons
+
+| Animate | Don't animate |
+| --- | --- |
+| Icons that appear on hover (action buttons) | Static navigation icons |
+| State change icons (play → pause, like → liked) | Decorative icons |
+| Icons in contextual toolbars | Icons that are always visible |
+| Loading/success state indicators | Icon labels (text next to icon) |
+
+**Spring animations** (via Motion/Framer Motion) work particularly well for icon transitions because they feel natural and responsive — the slight overshoot gives a sense of physicality.
