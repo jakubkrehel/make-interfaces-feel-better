@@ -113,47 +113,50 @@ Some icons have uneven visual weight. The best fix is adjusting the SVG directly
 
 ## Shadows Instead of Borders
 
-Prefer subtle `box-shadow` over solid borders for depth. Shadows adapt to any background since they use transparency; solid borders don't.
+Prefer subtle `box-shadow` over solid borders for depth. Shadows adapt to any background since they use transparency; solid borders don't. This also helps when using images or multiple colors as backgrounds — solid border colors don't work well on backgrounds other than the ones they were designed for.
 
-### Layered Shadow Example
+### Shadow as Border (Light Mode)
 
-Layer 3 shadows for natural depth — a tight shadow for definition, a medium spread for lift, and a soft ambient shadow:
+The shadow is comprised of three layers. The first acts as a 1px border ring, the second adds subtle lift, and the third provides ambient depth:
 
 ```css
-/* Good — layered shadows */
-.card {
-  box-shadow:
-    0px 1px 1px rgba(0, 0, 0, 0.03),
-    0px 4px 6px rgba(0, 0, 0, 0.02),
-    0px 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-/* Bad — hard border */
-.card {
-  border: 1px solid #e5e5e5;
+:root {
+  --shadow-border:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.06),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.06),
+    0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.08),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.08),
+    0px 2px 4px 0px rgba(0, 0, 0, 0.06);
 }
 ```
 
-### Hover Transitions
+### Shadow as Border (Dark Mode)
 
-Use the same shadow layers but slightly darker values for hover. Add `transition-property: box-shadow` for a smooth transition:
+In dark mode, simplify to a single white ring — layered depth shadows aren't visible on dark backgrounds:
+
+```css
+/* Dark mode — adapt to whatever setup the project uses
+   (prefers-color-scheme, class, data attribute, etc.) */
+--shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
+--shadow-border-hover: 0 0 0 1px rgba(255, 255, 255, 0.13);
+```
+
+### Usage with Hover Transition
+
+Apply the variable and add `transition-[box-shadow]` for a smooth hover:
 
 ```css
 .card {
-  box-shadow:
-    0px 1px 1px rgba(0, 0, 0, 0.03),
-    0px 4px 6px rgba(0, 0, 0, 0.02),
-    0px 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-border);
   transition-property: box-shadow;
   transition-duration: 150ms;
   transition-timing-function: ease;
 }
 
 .card:hover {
-  box-shadow:
-    0px 2px 2px rgba(0, 0, 0, 0.05),
-    0px 8px 12px rgba(0, 0, 0, 0.04),
-    0px 2px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-border-hover);
 }
 ```
 
