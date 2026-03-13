@@ -33,3 +33,7 @@ You can also invoke it manually:
 ```
 /make-interfaces-feel-better
 ```
+
+## License
+
+MIT
