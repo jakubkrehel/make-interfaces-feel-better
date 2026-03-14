@@ -160,7 +160,7 @@ Exit animations should be softer and less attention-grabbing than enter animatio
 .item-exit {
   opacity: 0;
   transform: translateY(-12px);
-  transition: all 150ms ease-in;
+  transition: opacity 150ms ease-in, transform 150ms ease-in;
 }
 
 /* Bad — dramatic exit that steals focus */
@@ -240,3 +240,103 @@ function IconButton({ isActive, icon: Icon }) {
 | Loading/success state indicators | Icon labels (text next to icon) |
 
 **Spring animations** (via Motion/Framer Motion) work particularly well for icon transitions because they feel natural and responsive — the slight overshoot gives a sense of physicality.
+
+## Scale on Press
+
+A subtle scale-down on click gives buttons tactile feedback. Use CSS transitions for interruptibility — if the user releases mid-press, it should smoothly return.
+
+Not every button needs this. Add a `static` prop to your button component that disables the scale effect when the motion would be distracting.
+
+### CSS Example
+
+```css
+.button {
+  transition-property: scale;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.button:active {
+  scale: 0.96;
+}
+```
+
+### Tailwind Example
+
+```tsx
+<button className="transition-transform duration-150 ease-out active:scale-[0.97]">
+  Click me
+</button>
+```
+
+### Motion Example
+
+```tsx
+<motion.button whileTap={{ scale: 0.96 }}>
+  Click me
+</motion.button>
+```
+
+### Static Prop Pattern
+
+Extract the scale class into a variable and conditionally apply it based on a `static` prop:
+
+```tsx
+const tapScale = "active:not-disabled:scale-[0.96]";
+
+function Button({ static: isStatic, className, children, ...props }) {
+  return (
+    <button
+      className={cn(
+        "transition-transform duration-150 ease-out",
+        !isStatic && tapScale,
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Usage
+<Button>Click me</Button>           {/* scales on press */}
+<Button static>Submit</Button>       {/* no scale */}
+```
+
+## Skip Animation on Page Load
+
+Use `initial={false}` on `AnimatePresence` to prevent enter animations from firing on first render. Elements that are already in their default state shouldn't animate in on page load — only on subsequent state changes.
+
+### When It Works
+
+```tsx
+// Good — icon doesn't animate in on mount, only on state change
+<AnimatePresence initial={false} mode="popLayout">
+  <motion.span
+    key={isActive ? "active" : "inactive"}
+    initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+    exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+  >
+    <Icon />
+  </motion.span>
+</AnimatePresence>
+```
+
+Works well for: icon swaps, toggles, tabs, segmented controls — anything that has a default state on page load.
+
+### When It Breaks
+
+Don't use `initial={false}` when the component relies on its `initial` prop to set up a first-time enter animation, like a staggered page hero or a loading state. In those cases, removing the initial animation skips the entire entrance.
+
+```tsx
+// Bad — initial={false} would skip the staggered page enter entirely
+<AnimatePresence initial={false}>
+  <motion.div initial="hidden" animate="visible" variants={...}>
+    ...
+  </motion.div>
+</AnimatePresence>
+```
+
+Verify the component still looks right on a full page refresh before applying this.

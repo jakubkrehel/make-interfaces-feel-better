@@ -12,8 +12,9 @@ Great interfaces rarely come from a single thing. It's usually a collection of s
 | Category | When to Use |
 | --- | --- |
 | [Typography](typography.md) | Text wrapping, font smoothing, tabular numbers |
-| [Surfaces](surfaces.md) | Border radius, optical alignment, shadows, image outlines |
-| [Animations](animations.md) | Interruptible animations, enter/exit transitions, icon animations |
+| [Surfaces](surfaces.md) | Border radius, optical alignment, shadows, image outlines, hit areas |
+| [Animations](animations.md) | Interruptible animations, enter/exit transitions, icon animations, scale on press |
+| [Performance](performance.md) | Transition specificity, `will-change` usage |
 
 ## Core Principles
 
@@ -61,6 +62,26 @@ Use `text-wrap: balance` on headings. Use `text-wrap: pretty` for body text to a
 
 Add a subtle `1px` outline with low opacity to images for consistent depth.
 
+### 12. Scale on Press
+
+A subtle `scale(0.97)` on click gives buttons tactile feedback. Add a `static` prop to disable it when motion would be distracting.
+
+### 13. Skip Animation on Page Load
+
+Use `initial={false}` on `AnimatePresence` to prevent enter animations on first render. Verify it doesn't break intentional entrance animations.
+
+### 14. Never Use `transition: all`
+
+Always specify exact properties: `transition-property: scale, opacity`. Tailwind's `transition-transform` covers `transform, translate, scale, rotate`.
+
+### 15. Use `will-change` Sparingly
+
+Only for `transform`, `opacity`, `filter` — properties the GPU can composite. Never use `will-change: all`. Only add when you notice first-frame stutter.
+
+### 16. Minimum Hit Area
+
+Interactive elements need at least 40×40px hit area. Extend with a pseudo-element if the visible element is smaller. Never let hit areas of two elements overlap.
+
 ## Common Mistakes
 
 | Mistake | Fix |
@@ -71,6 +92,10 @@ Add a subtle `1px` outline with low opacity to images for consistent depth.
 | Jarring enter/exit animations | Split, stagger, and keep exits subtle |
 | Numbers cause layout shift | Apply `tabular-nums` |
 | Heavy text on macOS | Apply `antialiased` to root |
+| Animation plays on page load | Add `initial={false}` to `AnimatePresence` |
+| `transition: all` on elements | Specify exact properties |
+| First-frame animation stutter | Add `will-change: transform` (sparingly) |
+| Tiny hit areas on small controls | Extend with pseudo-element to 40×40px |
 
 ## Review Checklist
 
@@ -83,9 +108,15 @@ Add a subtle `1px` outline with low opacity to images for consistent depth.
 - [ ] Font smoothing is applied
 - [ ] Headings use text-wrap: balance
 - [ ] Images have subtle outlines
+- [ ] Buttons use scale on press where appropriate
+- [ ] AnimatePresence uses `initial={false}` for default-state elements
+- [ ] No `transition: all` — only specific properties
+- [ ] `will-change` only on transform/opacity/filter, never `all`
+- [ ] Interactive elements have at least 40×40px hit area
 
 ## Reference Files
 
 - [typography.md](typography.md) — Text wrapping, font smoothing, tabular numbers
 - [surfaces.md](surfaces.md) — Border radius, optical alignment, shadows, image outlines
-- [animations.md](animations.md) — Interruptible animations, enter/exit transitions, icon animations
+- [animations.md](animations.md) — Interruptible animations, enter/exit transitions, icon animations, scale on press
+- [performance.md](performance.md) — Transition specificity, `will-change` usage

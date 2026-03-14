@@ -155,7 +155,7 @@ Apply the variable and add `transition-[box-shadow]` for a smooth hover:
   box-shadow: var(--shadow-border);
   transition-property: box-shadow;
   transition-duration: 150ms;
-  transition-timing-function: ease;
+  transition-timing-function: ease-out;
 }
 
 .card:hover {
@@ -206,3 +206,40 @@ img {
 ```
 
 **Why outline instead of border?** `outline` doesn't affect layout (no added width/height), and `outline-offset: -1px` keeps it inset so images stay their intended size.
+
+## Minimum Hit Area
+
+Interactive elements should have a minimum hit area of 44×44px (WCAG) or at least 40×40px. If the visible element is smaller (e.g., a 20×20 checkbox), extend the hit area with a pseudo-element.
+
+### CSS Example
+
+```css
+/* Small checkbox with expanded hit area */
+.checkbox {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.checkbox::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+}
+```
+
+### Tailwind Example
+
+```tsx
+<button className="relative size-5 after:absolute after:top-1/2 after:left-1/2 after:size-10 after:-translate-1/2">
+  <CheckIcon />
+</button>
+```
+
+### Collision Rule
+
+If the extended hit area overlaps another interactive element, shrink the pseudo-element — but make it as large as possible without colliding. Two interactive elements should never have overlapping hit areas.
