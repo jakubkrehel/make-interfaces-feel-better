@@ -12,7 +12,7 @@ Great interfaces rarely come from a single thing. It's usually a collection of s
 | Category | When to Use |
 | --- | --- |
 | [Typography](typography.md) | Text wrapping, font smoothing, tabular numbers |
-| [Layout & Spacing](layout-and-spacing.md) | Border radius, optical alignment, shadows, image outlines |
+| [Surfaces](surfaces.md) | Border radius, optical alignment, shadows, image outlines |
 | [Animations](animations.md) | Interruptible animations, enter/exit transitions, icon animations |
 
 ## Core Principles
@@ -87,5 +87,5 @@ Add a subtle `1px` outline with low opacity to images for consistent depth.
 ## Reference Files
 
 - [typography.md](typography.md) — Text wrapping, font smoothing, tabular numbers
-- [layout-and-spacing.md](layout-and-spacing.md) — Border radius, optical alignment, shadows, image outlines
+- [surfaces.md](surfaces.md) — Border radius, optical alignment, shadows, image outlines
 - [animations.md](animations.md) — Interruptible animations, enter/exit transitions, icon animations

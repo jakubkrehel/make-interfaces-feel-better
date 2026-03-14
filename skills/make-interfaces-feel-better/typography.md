@@ -1,6 +1,6 @@
 # Typography
 
-Text rendering details that make interfaces feel polished.
+Typography rendering details that make interfaces feel better.
 
 ## Text Wrapping
 

@@ -1,4 +1,4 @@
-# Layout & Spacing
+# Surfaces
 
 Border radius, optical alignment, shadows, and image outlines.
 
@@ -9,6 +9,8 @@ When nesting rounded elements, the outer radius must equal the inner radius plus
 ```
 outerRadius = innerRadius + padding
 ```
+
+This rule is most useful when nested surfaces are close together. If padding is larger than `24px`, treat the layers as separate surfaces and choose each radius independently instead of forcing strict concentric math.
 
 ### Example
 
@@ -58,13 +60,14 @@ When geometric centering looks off, align optically instead.
 
 ### Buttons with Text + Icon
 
-Use slightly less padding on the icon side to make the button feel balanced:
+Use slightly less padding on the icon side to make the button feel balanced. A reliable rule of thumb is:
+`icon-side padding = text-side padding - 2px`.
 
 ```css
 /* Good — less padding on icon side */
 .button-with-icon {
   padding-left: 16px;
-  padding-right: 12px; /* icon side, less padding */
+  padding-right: 14px; /* icon side = text side - 2px */
 }
 
 /* Bad — equal padding looks like icon is pushed too far right */
@@ -75,7 +78,7 @@ Use slightly less padding on the icon side to make the button feel balanced:
 
 ```tsx
 // Tailwind
-<button className="pl-4 pr-3 flex items-center gap-2">
+<button className="pl-4 pr-3.5 flex items-center gap-2">
   <span>Continue</span>
   <ArrowRightIcon />
 </button>
@@ -113,7 +116,7 @@ Some icons have uneven visual weight. The best fix is adjusting the SVG directly
 
 ## Shadows Instead of Borders
 
-Prefer subtle `box-shadow` over solid borders for depth. Shadows adapt to any background since they use transparency; solid borders don't. This also helps when using images or multiple colors as backgrounds — solid border colors don't work well on backgrounds other than the ones they were designed for.
+When an element already has a border for depth or separation, prefer replacing it with a subtle `box-shadow`. Shadows adapt to any background since they use transparency; solid borders don't. This also helps when using images or multiple colors as backgrounds — solid border colors don't work well on backgrounds other than the ones they were designed for.
 
 ### Shadow as Border (Light Mode)
 
@@ -165,9 +168,10 @@ Apply the variable and add `transition-[box-shadow]` for a smooth hover:
 | Use shadows | Use borders |
 | --- | --- |
 | Cards, containers with depth | Dividers between list items |
-| Elevated elements (dropdowns, modals) | Table cell boundaries |
-| Elements on varied backgrounds | Form input outlines (for accessibility) |
-| Hover/focus states for lift effect | Hairline separators in dense UI |
+| Buttons with bordered styles | Table cell boundaries |
+| Elevated elements (dropdowns, modals) | Form input outlines (for accessibility) |
+| Elements on varied backgrounds | Hairline separators in dense UI |
+| Hover/focus states for lift effect | |
 
 ## Image Outlines
 

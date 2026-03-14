@@ -197,10 +197,10 @@ function IconButton({ isActive, icon: Icon }) {
       <AnimatePresence mode="popLayout">
         <motion.span
           key={isActive ? "active" : "inactive"}
-          initial={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
+          initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
-          transition={{ type: "spring", duration: 0.3, bounce: 0.1 }}
+          exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+          transition={{ type: "spring", duration: 0.3, bounce: 0 }}
         >
           <Icon />
         </motion.span>
@@ -215,9 +215,12 @@ function IconButton({ isActive, icon: Icon }) {
 ```css
 .icon-enter {
   opacity: 0;
-  transform: scale(0.6);
+  transform: scale(0.25);
   filter: blur(4px);
-  transition: all 200ms ease-out;
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    filter 200ms ease-out;
 }
 
 .icon-enter.visible {
