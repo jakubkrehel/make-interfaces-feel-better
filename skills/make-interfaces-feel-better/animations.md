@@ -210,25 +210,58 @@ function IconButton({ isActive, icon: Icon }) {
 }
 ```
 
-### CSS-Only Approach
+### CSS Transition Approach (No Motion)
 
-```css
-.icon-enter {
-  opacity: 0;
-  transform: scale(0.25);
-  filter: blur(4px);
-  transition:
-    opacity 200ms ease-out,
-    transform 200ms ease-out,
-    filter 200ms ease-out;
-}
+If the project doesn't use Motion (Framer Motion), keep both icons in the DOM and cross-fade them with CSS transitions. Because neither icon unmounts, both enter and exit animate smoothly.
 
-.icon-enter.visible {
-  opacity: 1;
-  transform: scale(1);
-  filter: blur(0);
+The trick: one icon is absolutely positioned on top of the other. Toggling state cross-fades them — the entering icon scales up from `0.25` while the exiting icon scales down to `0.25`, both with opacity and blur.
+
+```tsx
+function IconButton({ isActive, ActiveIcon, InactiveIcon }) {
+  return (
+    <button>
+      <div className="relative">
+        <div
+          className={cn(
+            "absolute inset-0 flex items-center justify-center",
+            "transition-[opacity,filter,scale] duration-300",
+            "cubic-bezier(0.2, 0, 0, 1)",
+            isActive
+              ? "scale-100 opacity-100 blur-0"
+              : "scale-[0.25] opacity-0 blur-[4px]"
+          )}
+        >
+          <ActiveIcon />
+        </div>
+        <div
+          className={cn(
+            "transition-[opacity,filter,scale] duration-300",
+            "cubic-bezier(0.2, 0, 0, 1)",
+            isActive
+              ? "scale-[0.25] opacity-0 blur-[4px]"
+              : "scale-100 opacity-100 blur-0"
+          )}
+        >
+          <InactiveIcon />
+        </div>
+      </div>
+    </button>
+  );
 }
 ```
+
+The non-absolute icon (InactiveIcon) defines the layout size. The absolute icon (ActiveIcon) overlays it without affecting flow.
+
+### Choosing Between Motion and CSS
+
+| | Motion (Framer Motion) | CSS transitions (both icons in DOM) |
+| --- | --- | --- |
+| **Enter animation** | Yes | Yes |
+| **Exit animation** | Yes (via `AnimatePresence`) | Yes (cross-fade — icon never unmounts) |
+| **Spring physics** | Yes | No — use `cubic-bezier(0.2, 0, 0, 1)` as approximation |
+| **When to use** | Project already uses `motion/react` | No motion dependency, or keeping bundle small |
+
+**Rule:** Check the project's `package.json` for `motion` or `framer-motion`. If present, use the Motion approach. If not, use the CSS cross-fade pattern — don't add a dependency just for icon transitions.
 
 ### When to Animate Icons
 
@@ -239,7 +272,11 @@ function IconButton({ isActive, icon: Icon }) {
 | Icons in contextual toolbars | Icons that are always visible |
 | Loading/success state indicators | Icon labels (text next to icon) |
 
-**Spring animations** (via Motion/Framer Motion) work particularly well for icon transitions because they feel natural and responsive — the slight overshoot gives a sense of physicality.
+**Important:** Always use exactly these values for contextual icon animations — do not deviate:
+- `scale`: `0.25` → `1` (never use `0.5` or `0.6`)
+- `opacity`: `0` → `1`
+- `filter`: `"blur(4px)"` → `"blur(0px)"`
+- `transition`: `{ type: "spring", duration: 0.3, bounce: 0 }` — **bounce must always be `0`**, never `0.1` or any other value
 
 ## Scale on Press
 
