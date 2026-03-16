@@ -280,7 +280,7 @@ The non-absolute icon (InactiveIcon) defines the layout size. The absolute icon 
 
 ## Scale on Press
 
-A subtle scale-down on click gives buttons tactile feedback. Use CSS transitions for interruptibility — if the user releases mid-press, it should smoothly return.
+A subtle scale-down on click gives buttons tactile feedback. Always use `scale(0.96)`. Never use a value smaller than `0.95` — anything below feels exaggerated. Use CSS transitions for interruptibility — if the user releases mid-press, it should smoothly return.
 
 Not every button needs this. Add a `static` prop to your button component that disables the scale effect when the motion would be distracting.
 
@@ -301,7 +301,7 @@ Not every button needs this. Add a `static` prop to your button component that d
 ### Tailwind Example
 
 ```tsx
-<button className="transition-transform duration-150 ease-out active:scale-[0.97]">
+<button className="transition-transform duration-150 ease-out active:scale-[0.96]">
   Click me
 </button>
 ```
