@@ -1,6 +1,6 @@
 # Make Interfaces Feel Better
 
-An [Agent Skill](https://docs.anthropic.com/en/docs/claude-code/skills) based on the article [Details that make interfaces feel better](https://jakub.kr/writing/details-that-make-interfaces-feel-better) by Jakub Krehel.
+An [Agent Skill](https://docs.anthropic.com/en/docs/claude-code/skills) based on the article [Details that make interfaces feel better](https://jakub.kr/writing/details-that-make-interfaces-feel-better).
 
 This skill teaches AI coding assistants (Claude Code, Codex, etc.) the small design engineering details that compound into a great interface.
 
