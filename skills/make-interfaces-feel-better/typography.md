@@ -34,21 +34,33 @@ h1 {
 
 ### text-wrap: pretty
 
-Optimizes the last line to avoid orphans using a slower algorithm that favors better typography over performance. Unlike `balance`, it works on longer text — use this for body copy where you want to minimize orphans without the 6-line limit.
+Prevents orphaned words (a single word dangling on the last line) by adjusting line breaks throughout the paragraph. Unlike `balance`, it doesn't try to equalize line lengths — it just ensures the last line isn't embarrassingly short. Works on text of any length with no line-count limit.
+
+This should be your **default for short-to-medium text** — paragraphs, descriptions, captions, list items, card text. For very long text (10+ lines), skip both `pretty` and `balance` — the browser's default wrapping is fine and you avoid unnecessary layout cost.
 
 ```css
-p {
+/* Good — descriptions, captions, short paragraphs */
+p, li, figcaption, blockquote {
   text-wrap: pretty;
 }
 ```
+
+```tsx
+// Tailwind
+<p className="text-pretty">
+  A short paragraph that won't leave an orphan on the last line.
+</p>
+```
+
+**Tailwind:** `text-pretty`
 
 ### When to Use Which
 
 | Scenario | Use |
 | --- | --- |
-| Headings, titles, short text (≤6 lines) | `text-wrap: balance` |
-| Body paragraphs, descriptions | `text-wrap: pretty` |
-| Code blocks, pre-formatted text | Neither — leave default |
+| Headings, titles where even distribution matters | `text-wrap: balance` |
+| Short-to-medium text — paragraphs, descriptions, captions, UI text | `text-wrap: pretty` |
+| Long text (10+ lines), code blocks, pre-formatted text | Neither — leave default |
 
 ## Font Smoothing (macOS)
 
