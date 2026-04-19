@@ -97,6 +97,32 @@ Interactive elements need at least 40×40px hit area. Extend with a pseudo-eleme
 | First-frame animation stutter | Add `will-change: transform` (sparingly) |
 | Tiny hit areas on small controls | Extend with pseudo-element to 40×40px |
 
+## Review Output Format
+
+Always present changes as a markdown table with **Before** and **After** columns. Include every change you made — not just a subset. Never list findings as separate "Before:" / "After:" lines outside of a table. Group changes by principle using a heading above each table, and keep each row focused on a single diff so the reader can scan the whole list quickly.
+
+### Example
+
+#### Concentric border radius
+| Before | After |
+| --- | --- |
+| `rounded-xl` on card + `rounded-xl` on inner button (`p-2`) | `rounded-2xl` on card (`12 + 8`), `rounded-lg` on inner button |
+| `border-radius: 16px` on both nested surfaces | Outer `24px`, inner `16px` with `8px` padding |
+
+#### Tabular numbers
+| Before | After |
+| --- | --- |
+| `<span>{count}</span>` on animated counter | `<span className="tabular-nums">{count}</span>` |
+| Default numerals on timer | Added `font-variant-numeric: tabular-nums` to root |
+
+#### Scale on press
+| Before | After |
+| --- | --- |
+| `<button className="...">` | Added `active:scale-[0.96] transition-transform` |
+| `scale(0.9)` on press | Raised to `scale(0.96)` — anything below `0.95` feels exaggerated |
+
+Rows should cite the specific file and the specific property that changed when it isn't obvious from the snippet. If a principle was reviewed but nothing needed to change, omit that table entirely — empty tables add noise.
+
 ## Review Checklist
 
 - [ ] Nested rounded elements use concentric border radius
