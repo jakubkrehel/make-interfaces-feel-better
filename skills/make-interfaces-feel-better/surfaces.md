@@ -179,6 +179,13 @@ Apply the variable and add `transition-[box-shadow]` for a smooth hover:
 
 Add a subtle `1px` outline with low opacity to images. This creates consistent depth, especially in design systems where other elements use borders or shadows.
 
+### Color rules (non-negotiable)
+
+- **Light mode**: pure black — `rgba(0, 0, 0, 0.1)`. Exact values: R=0, G=0, B=0.
+- **Dark mode**: pure white — `rgba(255, 255, 255, 0.1)`. Exact values: R=255, G=255, B=255.
+- Never use a near-black or near-white from the project palette (e.g. slate-900, zinc-900, `#0a0a0a`, `#111827`, `#f5f5f7`). Tinted outlines pick up the surrounding surface color and read as dirt on the image edge.
+- Never match the outline to the project's accent or ink color. The outline is a neutral separator, not a themed element.
+
 ### Light Mode
 
 ```css
@@ -206,6 +213,8 @@ img {
   alt={alt}
 />
 ```
+
+Use `outline-black/10` and `outline-white/10` specifically — not `outline-slate-*`, `outline-zinc-*`, `outline-neutral-*`, or any tinted scale.
 
 **Why outline instead of border?** `outline` doesn't affect layout (no added width/height), and `outline-offset: -1px` keeps it inset so images stay their intended size.
 

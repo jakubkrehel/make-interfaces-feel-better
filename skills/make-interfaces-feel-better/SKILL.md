@@ -60,7 +60,7 @@ Use `text-wrap: balance` on headings. Use `text-wrap: pretty` for body text to a
 
 ### 11. Image Outlines
 
-Add a subtle `1px` outline with low opacity to images for consistent depth.
+Add a subtle `1px` outline with low opacity to images for consistent depth. The color must be pure black in light mode (`rgba(0, 0, 0, 0.1)`) and pure white in dark mode (`rgba(255, 255, 255, 0.1)`) — never a near-black like slate, zinc, or any tinted neutral. A tinted outline picks up the surface color underneath it and reads as dirt on the image edge.
 
 ### 12. Scale on Press
 
