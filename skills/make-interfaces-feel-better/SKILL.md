@@ -80,7 +80,7 @@ Only for `transform`, `opacity`, `filter` — properties the GPU can composite. 
 
 ### 16. Minimum Hit Area
 
-Interactive elements need at least 40×40px hit area. Extend with a pseudo-element if the visible element is smaller. Never let hit areas of two elements overlap.
+Interactive elements should prefer a 44×44px hit area for touch or mobile contexts. In dense desktop interfaces, use at least 40×40px. Extend with a pseudo-element if the visible element is smaller. Never let hit areas of two elements overlap.
 
 ## Common Mistakes
 
@@ -95,7 +95,7 @@ Interactive elements need at least 40×40px hit area. Extend with a pseudo-eleme
 | Animation plays on page load | Add `initial={false}` to `AnimatePresence` |
 | `transition: all` on elements | Specify exact properties |
 | First-frame animation stutter | Add `will-change: transform` (sparingly) |
-| Tiny hit areas on small controls | Extend with pseudo-element to 40×40px |
+| Tiny hit areas on small controls | Extend with a pseudo-element to 44×44px for touch/mobile, or at least 40×40px in dense desktop UI |
 
 ## Review Output Format
 
@@ -138,7 +138,7 @@ Rows should cite the specific file and the specific property that changed when i
 - [ ] AnimatePresence uses `initial={false}` for default-state elements
 - [ ] No `transition: all` — only specific properties
 - [ ] `will-change` only on transform/opacity/filter, never `all`
-- [ ] Interactive elements have at least 40×40px hit area
+- [ ] Interactive elements have 44×44px hit areas for touch/mobile, or at least 40×40px in dense desktop UI
 
 ## Reference Files
 

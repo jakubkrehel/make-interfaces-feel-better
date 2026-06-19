@@ -20,15 +20,25 @@ This skill teaches AI coding assistants (Claude Code, Codex, etc.) the small des
 
 ## Installation
 
+For Claude Code:
+
 ```bash
 npx skills add jakubkrehel/make-interfaces-feel-better
 ```
 
+For Codex or other skill-aware agents, use the complete skill directory:
+
+```
+skills/make-interfaces-feel-better/
+```
+
+Keep the directory intact. `SKILL.md` links to `typography.md`, `surfaces.md`, `animations.md`, and `performance.md` with relative paths, so copying only `SKILL.md` drops the detailed guidance.
+
 ## Usage
 
-Once installed, Claude will automatically apply these principles when building UI components, reviewing frontend code, or implementing animations.
+Once installed, your agent can apply these principles when building UI components, reviewing frontend code, or implementing animations.
 
-You can also invoke it manually:
+In Claude Code, you can also invoke it manually:
 
 ```
 /make-interfaces-feel-better
@@ -36,4 +46,4 @@ You can also invoke it manually:
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE).
