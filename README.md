@@ -12,6 +12,20 @@ After the skill runs you'll get a comprehensive summary of the changes made and 
 
 ## Install
 
+For Claude Code:
+
 ```bash
 npx skills add jakubkrehel/make-interfaces-feel-better
 ```
+
+For Codex or other skill-aware agents, copy the complete skill directory:
+
+```
+skills/make-interfaces-feel-better/
+```
+
+Keep the directory intact. `SKILL.md` links to `typography.md`, `surfaces.md`, `animations.md`, and `performance.md` with relative paths, so copying only `SKILL.md` drops the detailed guidance.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

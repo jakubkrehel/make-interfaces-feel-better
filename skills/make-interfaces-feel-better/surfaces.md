@@ -220,12 +220,12 @@ Use `outline-black/10` and `outline-white/10` specifically — not `outline-slat
 
 ## Minimum Hit Area
 
-Interactive elements should have a minimum hit area of 44×44px (WCAG) or at least 40×40px. If the visible element is smaller (e.g., a 20×20 checkbox), extend the hit area with a pseudo-element.
+Interactive elements should prefer a 44×44px hit area for touch or mobile contexts. In dense desktop interfaces, use at least 40×40px. If the visible element is smaller (e.g., a 20×20 checkbox), extend the hit area with a pseudo-element.
 
 ### CSS Example
 
 ```css
-/* Small checkbox with expanded hit area */
+/* Small checkbox with expanded 44px hit area */
 .checkbox {
   position: relative;
   width: 20px;
@@ -238,15 +238,15 @@ Interactive elements should have a minimum hit area of 44×44px (WCAG) or at lea
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
 }
 ```
 
 ### Tailwind Example
 
 ```tsx
-<button className="relative size-5 after:absolute after:top-1/2 after:left-1/2 after:size-10 after:-translate-1/2">
+<button className="relative size-5 after:absolute after:top-1/2 after:left-1/2 after:size-11 after:-translate-1/2">
   <CheckIcon />
 </button>
 ```
