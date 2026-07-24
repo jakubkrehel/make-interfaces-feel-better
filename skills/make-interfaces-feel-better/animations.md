@@ -1,6 +1,6 @@
 # Animations
 
-Interruptible animations, enter/exit transitions, and contextual icon animations.
+Interruptible animations, enter/exit transitions, contextual icon animations, and motion restraint.
 
 ## Interruptible Animations
 
@@ -13,7 +13,7 @@ Users change intent mid-interaction. If animations aren't interruptible, the int
 | **Behavior** | Interpolate toward latest state | Run on a fixed timeline |
 | **Interruptible** | Yes — retargets mid-animation | No — restarts from beginning |
 | **Use for** | Interactive state changes (hover, toggle, open/close) | Staged sequences that run once (enter animations, loading) |
-| **Duration** | Adapts to remaining distance | Fixed regardless of state |
+| **Duration** | Fixed; retargets the value mid-flight, not the timeline | Fixed timeline, restarts from the beginning |
 
 ```css
 /* Good — interruptible transition for a toggle */
@@ -41,7 +41,7 @@ Users change intent mid-interaction. If animations aren't interruptible, the int
 
 ## Enter Animations: Split and Stagger
 
-Don't animate a single large container. Break content into semantic chunks and animate each individually.
+Use this pattern for infrequent staged entrances where sequence helps communicate hierarchy, such as the first load of a page hero, success state, or empty state. Break a large container into semantic chunks and animate each individually. Do not stagger routine interactions such as row hovers, keystrokes, or repeated tab changes.
 
 ### Step by Step
 
@@ -130,7 +130,7 @@ Exit animations should be softer and less attention-grabbing than enter animatio
     opacity: 0,
     y: -12,
     filter: "blur(4px)",
-    transition: { duration: 0.15, ease: "easeIn" },
+    transition: { duration: 0.15, ease: "easeOut" },
   }}
 >
   {content}
@@ -146,7 +146,7 @@ Exit animations should be softer and less attention-grabbing than enter animatio
   exit={{
     opacity: 0,
     x: "-100%",
-    transition: { duration: 0.2, ease: "easeIn" },
+    transition: { duration: 0.2, ease: "easeOut" },
   }}
 >
   {content}
@@ -160,17 +160,17 @@ Exit animations should be softer and less attention-grabbing than enter animatio
 .item-exit {
   opacity: 0;
   transform: translateY(-12px);
-  transition: opacity 150ms ease-in, transform 150ms ease-in;
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
 }
 
 /* Bad — dramatic exit that steals focus */
 .item-exit {
   opacity: 0;
   transform: translateY(-100%) scale(0.5);
-  transition: all 400ms ease-in;
+  transition: all 400ms ease-out;
 }
 
-/* Bad — no exit animation at all (element just vanishes) */
+/* Sometimes correct — remove immediately when motion adds no context */
 .item-exit {
   display: none;
 }
@@ -180,13 +180,15 @@ Exit animations should be softer and less attention-grabbing than enter animatio
 - Use a small fixed `translateY` (e.g., `-12px`) instead of the full container height
 - Keep some directional movement to indicate where the element went
 - Exit duration should be shorter than enter duration (150ms vs 300ms)
-- Don't remove exit animations entirely — subtle motion preserves context
+- Use a subtle exit when it preserves spatial context. Remove immediately when motion adds no information, the interaction repeats frequently, or reduced motion is requested.
 
 ## Contextual Icon Animations
 
 When icons appear or disappear contextually (on hover, on state change), animate them with `opacity`, `scale`, and `blur` rather than just toggling visibility.
 
 ### Motion Example
+
+This example uses the `motion` package. If the project instead has `framer-motion`, import the same APIs from `"framer-motion"`; never mix an installed package with the other package's import path.
 
 ```tsx
 import { AnimatePresence, motion } from "motion/react";
@@ -225,7 +227,7 @@ function IconButton({ isActive, ActiveIcon, InactiveIcon }) {
           className={cn(
             "absolute inset-0 flex items-center justify-center",
             "transition-[opacity,filter,scale] duration-300",
-            "cubic-bezier(0.2, 0, 0, 1)",
+            "ease-[cubic-bezier(0.2,0,0,1)]",
             isActive
               ? "scale-100 opacity-100 blur-0"
               : "scale-[0.25] opacity-0 blur-[4px]"
@@ -236,7 +238,7 @@ function IconButton({ isActive, ActiveIcon, InactiveIcon }) {
         <div
           className={cn(
             "transition-[opacity,filter,scale] duration-300",
-            "cubic-bezier(0.2, 0, 0, 1)",
+            "ease-[cubic-bezier(0.2,0,0,1)]",
             isActive
               ? "scale-[0.25] opacity-0 blur-[4px]"
               : "scale-100 opacity-100 blur-0"
@@ -259,9 +261,9 @@ The non-absolute icon (InactiveIcon) defines the layout size. The absolute icon 
 | **Enter animation** | Yes | Yes |
 | **Exit animation** | Yes (via `AnimatePresence`) | Yes (cross-fade — icon never unmounts) |
 | **Spring physics** | Yes | No — use `cubic-bezier(0.2, 0, 0, 1)` as approximation |
-| **When to use** | Project already uses `motion/react` | No motion dependency, or keeping bundle small |
+| **When to use** | Project already uses `motion` or `framer-motion` | No motion dependency, or keeping bundle small |
 
-**Rule:** Check the project's `package.json` for `motion` or `framer-motion`. If present, use the Motion approach. If not, use the CSS cross-fade pattern — don't add a dependency just for icon transitions.
+**Rule:** Check the project's `package.json`. Import from `"motion/react"` when `motion` is installed, or from `"framer-motion"` when `framer-motion` is installed. If both exist, follow the imports already used by the component or its nearest peers. If neither is present, use the CSS cross-fade pattern — don't add a dependency just for icon transitions.
 
 ### When to Animate Icons
 
@@ -377,3 +379,25 @@ Don't use `initial={false}` when the component relies on its `initial` prop to s
 ```
 
 Verify the component still looks right on a full page refresh before applying this.
+
+## Motion Restraint
+
+Motion is a budget, not a garnish:
+
+- **No custom animation on high-frequency interactions.** Repeated interactions get instant feedback or a minimal `opacity` or `background-color` transition at ≤150ms.
+- **Motion is never the only feedback channel.** Every animated state change also needs a static cue such as color, icon, or label.
+- **Brief and precise beats prominent.** If a shorter, smaller animation communicates the same thing, use it.
+- **Honor reduced-motion preferences.** Preserve the static cue and remove unnecessary movement.
+
+```css
+/* Good: high-frequency hover gets a minimal transition */
+.row:hover {
+  background-color: var(--surface-hover);
+  transition: background-color 100ms ease-out;
+}
+
+/* Bad: every hover replays a full entrance */
+.row:hover .row-icon {
+  animation: bounceIn 500ms;
+}
+```

@@ -4,7 +4,7 @@ Transition specificity and GPU compositing hints.
 
 ## Transition Only What Changes
 
-Never use `transition: all` or Tailwind's `transition` shorthand (which maps to `transition-property: all`). Always specify the exact properties that change.
+Never use `transition: all` or Tailwind's `transition-all`. Always specify the exact properties that change. Tailwind's bare `transition` maps to a curated default list of colors, opacity, shadow, and transforms, not to `all`; still prefer naming exactly what changes.
 
 ### Why
 
@@ -35,7 +35,7 @@ Never use `transition: all` or Tailwind's `transition` shorthand (which maps to 
 <button className="transition-[scale,background-color] duration-150 ease-out">
 
 // Bad — transition all
-<button className="transition duration-150 ease-out">
+<button className="transition-all duration-150 ease-out">
 ```
 
 ### Tailwind `transition-transform` Note
@@ -79,7 +79,7 @@ This particularly helps when an element is changing `scale`, `rotation`, or movi
 | `transform` | Yes | Yes |
 | `opacity` | Yes | Yes |
 | `filter` (blur, brightness) | Yes | Yes |
-| `clip-path` | Yes | Yes |
+| `clip-path` | Newer Chromium only | Rarely; not reliable cross-browser |
 | `top`, `left`, `width`, `height` | No | No |
 | `background`, `border`, `color` | No | No |
 

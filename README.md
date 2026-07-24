@@ -6,9 +6,9 @@
 
 An agent skill focused on the small details that make interfaces feel better.
 
-The skill helps with a lot of aspects of UI such as animations, typography, hover states, optical alignment, concentric border radius, using shadows and much more.
+The [skill](skills/make-interfaces-feel-better/SKILL.md) covers animations, typography, icons, hover states, optical alignment, concentric border radius, shadows, hit areas, and other interface details.
 
-After the skill runs you'll get a comprehensive summary of the changes made and you can ask any follow up questions and the agent will help answer them.
+Reviews support `quick` and `full` modes. They return prioritized findings with exact locations, proposed changes, reasoning, verification, rejected candidates, and an explicit verdict.
 
 ## Install
 
@@ -24,7 +24,27 @@ For Codex or other skill-aware agents, copy the complete skill directory:
 skills/make-interfaces-feel-better/
 ```
 
-Keep the directory intact. `SKILL.md` links to `typography.md`, `surfaces.md`, `animations.md`, and `performance.md` with relative paths, so copying only `SKILL.md` drops the detailed guidance.
+Keep the directory intact. `SKILL.md` links to `typography.md`, `surfaces.md`, `animations.md`, `icons.md`, and `performance.md` with relative paths, so copying only `SKILL.md` drops the detailed guidance and agent metadata.
+
+## Use
+
+The default review mode is `full`. Pass `quick` for a shorter review, and add the screen, component, or feature after the mode.
+
+In Claude Code:
+
+```text
+/make-interfaces-feel-better
+/make-interfaces-feel-better quick
+/make-interfaces-feel-better full pricing page
+```
+
+In Codex:
+
+```text
+$make-interfaces-feel-better
+$make-interfaces-feel-better quick
+$make-interfaces-feel-better full pricing page
+```
 
 ## License
 
