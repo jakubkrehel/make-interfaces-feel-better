@@ -127,13 +127,13 @@ The shadow is comprised of three layers. The first acts as a 1px border ring, th
 ```css
 :root {
   --shadow-border:
-    0px 0px 0px 1px rgba(0, 0, 0, 0.06),
-    0px 1px 2px -1px rgba(0, 0, 0, 0.06),
-    0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+    0px 0px 0px 1px oklch(0 0 0 / 0.06),
+    0px 1px 2px -1px oklch(0 0 0 / 0.06),
+    0px 2px 4px 0px oklch(0 0 0 / 0.04);
   --shadow-border-hover:
-    0px 0px 0px 1px rgba(0, 0, 0, 0.08),
-    0px 1px 2px -1px rgba(0, 0, 0, 0.08),
-    0px 2px 4px 0px rgba(0, 0, 0, 0.06);
+    0px 0px 0px 1px oklch(0 0 0 / 0.08),
+    0px 1px 2px -1px oklch(0 0 0 / 0.08),
+    0px 2px 4px 0px oklch(0 0 0 / 0.06);
 }
 ```
 
@@ -144,8 +144,8 @@ In dark mode, simplify to a single white ring — layered depth shadows aren't v
 ```css
 /* Dark mode — adapt to whatever setup the project uses
    (prefers-color-scheme, class, data attribute, etc.) */
---shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
---shadow-border-hover: 0 0 0 1px rgba(255, 255, 255, 0.13);
+--shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+--shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
 ```
 
 ### Usage with Hover Transition
@@ -181,8 +181,8 @@ Add a subtle `1px` outline with low opacity to images. This creates consistent d
 
 ### Color rules (non-negotiable)
 
-- **Light mode**: pure black — `rgba(0, 0, 0, 0.1)`. Exact values: R=0, G=0, B=0.
-- **Dark mode**: pure white — `rgba(255, 255, 255, 0.1)`. Exact values: R=255, G=255, B=255.
+- **Light mode**: pure black, `oklch(0 0 0 / 0.1)`.
+- **Dark mode**: pure white, `oklch(1 0 0 / 0.1)`.
 - Never use a near-black or near-white from the project palette (e.g. slate-900, zinc-900, `#0a0a0a`, `#111827`, `#f5f5f7`). Tinted outlines pick up the surrounding surface color and read as dirt on the image edge.
 - Never match the outline to the project's accent or ink color. The outline is a neutral separator, not a themed element.
 
@@ -190,7 +190,7 @@ Add a subtle `1px` outline with low opacity to images. This creates consistent d
 
 ```css
 img {
-  outline: 1px solid rgba(0, 0, 0, 0.1);
+  outline: 1px solid oklch(0 0 0 / 0.1);
   outline-offset: -1px; /* inset so it doesn't add to layout */
 }
 ```
@@ -199,7 +199,7 @@ img {
 
 ```css
 img {
-  outline: 1px solid rgba(255, 255, 255, 0.1);
+  outline: 1px solid oklch(1 0 0 / 0.1);
   outline-offset: -1px;
 }
 ```
