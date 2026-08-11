@@ -56,7 +56,7 @@ Apply `-webkit-font-smoothing: antialiased` to the root layout on macOS for cris
 
 ### 9. Tabular Numbers
 
-Use `font-variant-numeric: tabular-nums` for any dynamically updating numbers to prevent layout shift.
+Use `font-variant-numeric: tabular-nums` for any dynamically updating numbers to prevent layout shift when digits are substituted. It does not reserve space for an added digit, so where a value can change length (`99` to `100`), also reserve a width or right-align it.
 
 ### 10. Text Wrapping
 

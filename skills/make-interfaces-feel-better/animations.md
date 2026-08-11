@@ -193,9 +193,11 @@ This example uses the `motion` package. If the project instead has `framer-motio
 ```tsx
 import { AnimatePresence, motion } from "motion/react";
 
-function IconButton({ isActive, icon: Icon }) {
+function IconButton({ isActive, ActiveIcon, InactiveIcon, label }) {
+  const Icon = isActive ? ActiveIcon : InactiveIcon;
+
   return (
-    <button>
+    <button aria-label={label}>
       <AnimatePresence mode="popLayout">
         <motion.span
           key={isActive ? "active" : "inactive"}
@@ -219,9 +221,9 @@ If the project doesn't use Motion (Framer Motion), keep both icons in the DOM an
 The trick: one icon is absolutely positioned on top of the other. Toggling state cross-fades them — the entering icon scales up from `0.25` while the exiting icon scales down to `0.25`, both with opacity and blur.
 
 ```tsx
-function IconButton({ isActive, ActiveIcon, InactiveIcon }) {
+function IconButton({ isActive, ActiveIcon, InactiveIcon, label }) {
   return (
-    <button>
+    <button aria-label={label}>
       <div className="relative">
         <div
           className={cn(
@@ -390,10 +392,14 @@ Motion is a budget, not a garnish:
 - **Honor reduced-motion preferences.** Preserve the static cue and remove unnecessary movement.
 
 ```css
-/* Good: high-frequency hover gets a minimal transition */
+/* Good: high-frequency hover gets a minimal transition.
+   Declare it on the base state, not inside :hover — a transition that
+   only exists while hovered animates on hover-in and snaps on hover-out. */
+.row {
+  transition: background-color 100ms ease-out;
+}
 .row:hover {
   background-color: var(--surface-hover);
-  transition: background-color 100ms ease-out;
 }
 
 /* Bad: every hover replays a full entrance */
