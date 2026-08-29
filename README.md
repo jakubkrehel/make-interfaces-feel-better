@@ -6,7 +6,7 @@
 
 An agent skill focused on the small details that make interfaces feel better.
 
-The [skill](skills/make-interfaces-feel-better/SKILL.md) covers animations, typography, icons, hover states, optical alignment, concentric border radius, shadows, hit areas, and other interface details.
+The [skill](skills/make-interfaces-feel-better/SKILL.md) covers animations, typography, icons, hover states, optical alignment, concentric border radius, shadows, hit areas and more.
 
 ## Install
 
