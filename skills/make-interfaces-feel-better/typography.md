@@ -122,7 +122,9 @@ html {
 
 ## Tabular Numbers
 
-When numbers update dynamically (counters, prices, timers, table columns), use tabular-nums to make all digits equal width. This prevents layout shift as values change.
+When numbers update dynamically (counters, prices, timers, table columns), use tabular-nums to make all digits equal width. This prevents layout shift when digits are substituted — `123` to `456` no longer changes the rendered width.
+
+It does not reserve space for a digit that wasn't there before. A counter crossing `99` to `100` still grows and shifts what follows it. Where total stability matters, pair tabular numerals with a reserved width sized to the largest expected value, or right-align the number so growth extends away from the surrounding content.
 
 ```css
 /* CSS */
